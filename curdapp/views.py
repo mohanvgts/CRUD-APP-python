@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from . import db
 from bson.json_util import dumps
 from bson.objectid import ObjectId
+from datetime import datetime
 database = db.client['CRUD']
 collection = database['user']
 
@@ -11,7 +12,7 @@ collection = database['user']
 #createuser
 def createUser(req):
     data = json.loads(req.body)
-    user = collection.insert_one(data)
+    user = collection.insert_one({**data,"createdAt":datetime.now()})
     return JsonResponse({'message': 'User created successfully'})
 #get all user list
 def getUser(req):
@@ -36,4 +37,4 @@ def updateUser(req,pk):
 #Delete user
 def deleteUser(req,pk):
     collection.delete_one({'_id':ObjectId(pk)})
-    return JsonResponse({'message':'user deleted....!!!'})
+    return JsonResponse({'message':'user deleted....!!!'})  
